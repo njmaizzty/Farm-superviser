@@ -281,6 +281,7 @@ export default function TaskDetailsScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
