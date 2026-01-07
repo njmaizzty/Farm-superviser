@@ -18,7 +18,7 @@ const { width } = Dimensions.get('window');
 export default function TaskDetailsScreen() {
   const router = useRouter();
   const { taskId } = useLocalSearchParams();
-  
+
   // Mock task data - in real app, fetch based on taskId
   const [task] = useState({
     id: taskId || '1',

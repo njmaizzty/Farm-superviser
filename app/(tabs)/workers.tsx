@@ -108,7 +108,7 @@ const mockWorkers = [
     joinDate: '2023-07-12',
     lastActive: '3 days ago',
     rating: 4.5,
-    location: 'Laboratory',
+    location: 'Block D',
   },
 ];
 
@@ -274,21 +274,11 @@ export default function WorkersScreen() {
           <Text style={styles.headerTitle}>Workers</Text>
           <View style={styles.headerActions}>
             <TouchableOpacity 
-              style={styles.aiButton}
-              onPress={() => router.push('/ai-recommendations')}
-              activeOpacity={0.8}
-            >
-              <IconSymbol name="brain.head.profile" size={20} color="#9C27B0" />
-              <View style={styles.aiBadge}>
-                <Text style={styles.aiBadgeText}>1</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity 
               style={styles.addButton}
               onPress={handleAddWorker}
               activeOpacity={0.8}
             >
-              <IconSymbol name="house.fill" size={24} color="#FFFFFF" />
+              <IconSymbol name="plus" size={24} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
@@ -300,7 +290,7 @@ export default function WorkersScreen() {
           color="#666666" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search workers by name"
+            placeholder="Search workers"
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholderTextColor="#999999"
@@ -378,31 +368,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-  },
-  aiButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#F3E5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  aiBadge: {
-    position: 'absolute',
-    top: 6,
-    right: 6,
-    backgroundColor: '#9C27B0',
-    borderRadius: 8,
-    width: 16,
-    height: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  aiBadgeText: {
-    color: '#FFFFFF',
-    fontSize: 10,
-    fontWeight: 'bold',
   },
   headerTitle: {
     fontSize: 28,

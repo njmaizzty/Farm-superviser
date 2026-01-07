@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { IconSymbol } from '@/components/ui/icon-symbol';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
   Alert,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function CreateFormScreen() {
   const router = useRouter();
@@ -55,6 +55,20 @@ export default function CreateFormScreen() {
         purchaseDate: '',
         purchasePrice: '',
       });
+    } else if (type === 'area') {
+      // setFormData({
+      //   blockName: '',
+      //   phase: '',
+      //   cropType: '',
+      //   totalArea: '',
+      //   blocks: '',
+      //   healthScore: '',
+      //   productivity: '',
+      //   supervisor: '',
+      //   irrigation: '',
+      //   soilType: '',
+      //   notes: '',
+      // });
     }
   }, [type]);
 
@@ -67,11 +81,9 @@ export default function CreateFormScreen() {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    
     // Simulate API call
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
       Alert.alert(
         'Success',
         `${getFormTitle()} created successfully!`,
@@ -91,10 +103,16 @@ export default function CreateFormScreen() {
 
   const getFormTitle = () => {
     switch (type) {
-      case 'task': return 'Task';
-      case 'worker': return 'Worker';
-      case 'asset': return 'Asset';
-      default: return 'Item';
+      case 'task':
+        return 'Task';
+      case 'worker':
+        return 'Worker';
+      case 'asset':
+        return 'Asset';
+      case 'area':
+        return 'Area';
+      default:
+        return 'Item';
     }
   };
 
@@ -400,10 +418,153 @@ export default function CreateFormScreen() {
     </>
   );
 
+  const renderAreaForm = () => (
+    <>
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Block Name *</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Block A"
+          value={formData.blockName}
+          onChangeText={(text) => handleInputChange('blockName', text)}
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Phase *</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Phase 1"
+          value={formData.phase}
+          onChangeText={(text) => handleInputChange('phase', text)}
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Crop Type</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Palm oil"
+          value={formData.cropType}
+          onChangeText={(text) => handleInputChange('cropType', text)}
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Total Area (hectares)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="25.5"
+          value={formData.totalArea}
+          onChangeText={(text) => handleInputChange('totalArea', text)}
+          keyboardType="numeric"
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Blocks (actual/expected)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="11/12"
+          value={formData.blocks}
+          onChangeText={(text) => handleInputChange('blocks', text)}
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Health Score (%)</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="90"
+          value={formData.healthScore}
+          onChangeText={(text) => handleInputChange('healthScore', text)}
+          keyboardType="numeric"
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Productivity</Text>
+        <View style={styles.segmentedControl}>
+          {['Low', 'Medium', 'High'].map((level) => (
+            <TouchableOpacity
+              key={level}
+              style={[
+                styles.segmentButton,
+                formData.productivity === level && styles.segmentButtonActive,
+              ]}
+              onPress={() => handleInputChange('productivity', level)}
+            >
+              <Text
+                style={[
+                  styles.segmentText,
+                  formData.productivity === level && styles.segmentTextActive,
+                ]}
+              >
+                {level}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Supervisor</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="John Smith"
+          value={formData.supervisor}
+          onChangeText={(text) => handleInputChange('supervisor', text)}
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Irrigation System</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Drip Irrigation"
+          value={formData.irrigation}
+          onChangeText={(text) => handleInputChange('irrigation', text)}
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Soil Type</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Loamy"
+          value={formData.soilType}
+          onChangeText={(text) => handleInputChange('soilType', text)}
+          placeholderTextColor="#999999"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Notes</Text>
+        <TextInput
+          style={[styles.input, styles.textArea]}
+          placeholder="Additional notes..."
+          value={formData.notes}
+          onChangeText={(text) => handleInputChange('notes', text)}
+          multiline
+          numberOfLines={4}
+          placeholderTextColor="#999999"
+        />
+      </View>
+    </>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
-      
+
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -413,6 +574,7 @@ export default function CreateFormScreen() {
         >
           <IconSymbol name="chevron.left" size={24} color="#2E7D32" />
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>Create {getFormTitle()}</Text>
         <View style={styles.placeholder} />
       </View>
@@ -431,6 +593,7 @@ export default function CreateFormScreen() {
             {type === 'task' && renderTaskForm()}
             {type === 'worker' && renderWorkerForm()}
             {type === 'asset' && renderAssetForm()}
+            {type === 'area' && renderAreaForm()}
           </View>
         </ScrollView>
 

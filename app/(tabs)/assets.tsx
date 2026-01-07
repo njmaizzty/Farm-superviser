@@ -306,28 +306,11 @@ export default function AssetsScreen() {
           <Text style={styles.headerTitle}>Assets</Text>
           <View style={styles.headerActions}>
             <TouchableOpacity 
-              style={styles.aiButton}
-              onPress={() => router.push('/ai-recommendations')}
-              activeOpacity={0.8}
-            >
-              <IconSymbol name="brain.head.profile" size={20} color="#9C27B0" />
-              <View style={styles.aiBadge}>
-                <Text style={styles.aiBadgeText}>1</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.viewToggle}
-              onPress={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
-              activeOpacity={0.7}
-            >
-              <IconSymbol name="house.fill" size={20} color="#666666" />
-            </TouchableOpacity>
-            <TouchableOpacity 
               style={styles.addButton}
               onPress={handleAddAsset}
               activeOpacity={0.8}
             >
-              <IconSymbol name="house.fill" size={24} color="#FFFFFF" />
+              <IconSymbol name="plus" size={24} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>

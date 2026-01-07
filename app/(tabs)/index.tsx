@@ -1,17 +1,17 @@
+import { IconSymbol } from "@/components/ui/icon-symbol";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
   Dimensions,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useAuth } from "@/contexts/AuthContext";
-import { IconSymbol } from "@/components/ui/icon-symbol";
-import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -43,16 +43,14 @@ export default function DashboardScreen() {
             </View>
 
             <View style={styles.headerActions}>
-              <TouchableOpacity style={styles.notificationButton}>
-                <IconSymbol name="house.fill" size={22} color="#FFFFFF" />
-                <View style={styles.notificationBadge}>
-                  <Text style={styles.notificationBadgeText}>3</Text>
-                </View>
-              </TouchableOpacity>
 
-              <TouchableOpacity style={styles.avatarButton}>
+              <TouchableOpacity 
+              style={styles.avatarButton} 
+              onPress={() => router.push("/")}
+            >
                 <IconSymbol name="house.fill" size={40} color="#FFFFFF" />
-              </TouchableOpacity>
+                  </TouchableOpacity>
+
             </View>
           </View>
         </View>

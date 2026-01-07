@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  Dimensions,
-  Alert,
-} from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import {
+  Alert,
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -179,8 +179,8 @@ export default function AreasScreen() {
   };
 
   const handleAddArea = () => {
-    Alert.alert('Add Area', 'Area registration form will be implemented here');
-  };
+  router.push('/create-form?type=area');
+};
 
   const renderAreaCard = ({ item }: { item: any }) => (
     <TouchableOpacity 
@@ -275,18 +275,11 @@ export default function AreasScreen() {
           <Text style={styles.headerTitle}>Areas</Text>
           <View style={styles.headerActions}>
             <TouchableOpacity 
-              style={styles.viewToggle}
-              onPress={() => setViewMode(viewMode === 'list' ? 'map' : 'list')}
-              activeOpacity={0.7}
-            >
-              <IconSymbol name="house.fill" size={20} color="#666666" />
-            </TouchableOpacity>
-            <TouchableOpacity 
               style={styles.addButton}
               onPress={handleAddArea}
               activeOpacity={0.8}
             >
-              <IconSymbol name="house.fill" size={24} color="#FFFFFF" />
+              <IconSymbol name="plus" size={24} color="#FFFFFF" />
             </TouchableOpacity>
           </View>
         </View>
@@ -296,7 +289,7 @@ export default function AreasScreen() {
           <IconSymbol name="house.fill" size={20} color="#666666" />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search areas by name, phase, or crop type..."
+            placeholder="Search areas by phase, block"
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholderTextColor="#999999"

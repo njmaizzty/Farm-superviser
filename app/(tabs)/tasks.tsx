@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
 
 const { width } = Dimensions.get('window');
 
@@ -84,6 +85,38 @@ const mockTasks = [
     category: 'Manuring',
     area: 'Block D',
   },
+    {
+    id: '5',
+    title: 'Harvest Loose Fruits - Block B',
+    description: 'Collect loose fruits from Block B',
+    status: 'Completed',
+    priority: 'Medium',
+    assignedTo: 'Faiz',
+    assignedToId: 'w2',
+    startDate: '2024-11-25',
+    endDate: '2024-11-26',
+    progress: 100,
+    assetId: 'asset2',
+    assetName: 'Harvest Basket',
+    category: 'Harvesting',
+    area: 'Block B',
+  },
+  {
+    id: '6',
+    title: 'Weeding - Block D',
+    description: 'Complete weeding of paths in Block D',
+    status: 'Completed',
+    priority: 'Low',
+    assignedTo: 'Imran',
+    assignedToId: 'w8',
+    startDate: '2024-11-20',
+    endDate: '2024-11-21',
+    progress: 100,
+    assetId: '',
+    assetName: '',
+    category: 'Weeding',
+    area: 'Block D',
+  },
 ];
 
 // Mock data for workers with AI suitability scores
@@ -97,10 +130,53 @@ const workers = [
   { id: 'w7', name: 'Zul', expertise: ['Manuring'], availability: 'Available', experience: 3, suitabilityScore: 85, currentTasks: ['Manuring section B'] },
   { id: 'w8', name: 'Imran', expertise: ['Weeding'], availability: 'Available', experience: 3, suitabilityScore: 82, currentTasks: [] },
   { id: 'w9', name: 'Fauzi', expertise: ['Pest & Disease'], availability: 'Available', experience: 6, suitabilityScore: 87, currentTasks: ['Pest inspection section A'] },
+  { id: 'w10', name: 'Razak', expertise: ['General Work'], availability: 'Available', experience: 7, suitabilityScore: 89, currentTasks: ['Main gate security'] },
+  { id: 'w11', name: 'Aisyah', expertise: ['General Work'], availability: 'Available', experience: 4, suitabilityScore: 83, currentTasks: ['Office area cleaning'] },
 ];
 
 // Task types
-const TASK_TYPES = ['Harvesting', 'Pruning', 'Spraying', 'Manuring', 'Weeding', 'Pest & Disease', 'Mechanisation Fleet'];
+const TASK_TYPES = [
+  'General Work',
+  'Harvesting',
+  'Manuring',
+  'Weeding',
+  'Pest & Disease',
+  'Mechanisation Fleet',
+];
+
+const TASK_SUBTYPES: Record<string, string[]> = {
+  'General Work': [
+    'Security Personnel',
+    'Gardeners / Line Sweeper',
+    'Mechanical Work',
+    'Electrical Work',
+    'Apprentice',
+  ],
+  'Harvesting': [
+    'Harvester',
+    'Loose Fruit Collection',
+    'Pruning',
+  ],
+  'Manuring': [
+    'Fertilizer Application',
+    'Transporting Fertilizers',
+  ],
+  'Weeding': [
+    'Circle / Path',
+    'Selective',
+    'Blanket',
+  ],
+  'Pest & Disease': [
+    'Pest & Disease Census',
+    'Pest & Disease Control',
+  ],
+  'Mechanisation Fleet': [
+    'Badang A',
+    'Badang B',
+    'Badang C',
+    'Tractor A',
+  ],
+};
 
 // Area/Blocks
 const AREAS = ['Block A', 'Block B', 'Block C', 'Block D'];
@@ -157,6 +233,7 @@ export default function TasksScreen() {
   const [assignedTasks, setAssignedTasks] = useState<any[]>([]); // NEW: For tasks in modal
   const [selectedAsset, setSelectedAsset] = useState<any>(null);
   const [activeEndDate, setActiveEndDate] = useState<string | null>(null);
+  const [taskSubType, setTaskSubType] = useState('');
 
   const filters = ['All', 'Pending', 'In Progress', 'Completed'];
 
@@ -192,6 +269,8 @@ export default function TasksScreen() {
   // Task selection handler - filters and sorts workers by AI suitability
   const handleTaskTypeSelect = (type: string) => {
     setTaskType(type);
+    setTaskSubType('');
+
     const matchingWorkers = workers
       .filter(w => w.expertise.includes(type))
       .sort((a, b) => b.suitabilityScore - a.suitabilityScore);
@@ -219,8 +298,8 @@ export default function TasksScreen() {
     console.log('area:', area);
     
     // Validation
-    if (!taskType) {
-      Alert.alert('Missing Info', 'Please select a task type.');
+    if (!taskSubType) {
+      Alert.alert('Missing Info', 'Please select a task detail.');
       return;
     }
     if (selectedWorkers.length === 0) {
@@ -247,7 +326,7 @@ export default function TasksScreen() {
     const worker = selectedWorkers[0];
     const newTask = {
       id: String(Date.now()),
-      title: `${taskType} - ${area}`,
+      title: `${taskType} - ${taskSubType} - ${area}`,
       description: `Assigned to ${worker.name}`,
       status: 'Pending',
       priority: priority,
@@ -315,6 +394,7 @@ export default function TasksScreen() {
       assetId: '',
       assetName: '',
       category: a.taskType,
+      subCategory: taskSubType,
       area: a.area,
     }));
 
@@ -455,6 +535,34 @@ export default function TasksScreen() {
                 </TouchableOpacity>
               ))}
             </View>
+
+            {/* Task Detail */}
+            {taskType && TASK_SUBTYPES[taskType] && (
+           <>
+              <Text style={styles.label}>Task Detail</Text>
+                <View style={styles.taskTypeContainer}>
+          {TASK_SUBTYPES[taskType].map(sub => (
+              <TouchableOpacity
+          key={sub}
+          style={[
+            styles.taskTypeButton,
+            taskSubType === sub && styles.taskTypeButtonActive,
+          ]}
+          onPress={() => setTaskSubType(sub)}
+        >
+          <Text
+            style={[
+              styles.taskTypeText,
+              taskSubType === sub && { color: '#FFFFFF' },
+            ]}
+          >
+            {sub}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  </>
+)}
 
             {/* AI Recommended Workers */}
             {recommendedWorkers.length > 0 && (
@@ -709,41 +817,69 @@ export default function TasksScreen() {
 
             {/* Assigned Tasks Cards */}
             {assignedTasks.length > 0 && (
-              <View style={styles.queueSection}>
-                <View style={styles.queueHeader}>
-                  <Text style={styles.queueTitle}>Assignment Queue</Text>
-                  <View style={styles.queueBadge}>
-                    <Text style={styles.queueBadgeText}>{assignedTasks.length}</Text>
-                  </View>
-                </View>
-                
-                {assignedTasks.map((assigned) => (
-                  <View key={assigned.id} style={styles.queueCard}>
-                    <View style={styles.queueCardHeader}>
-                      <Text style={styles.queueCardTitle}>{assigned.taskType}</Text>
-                      <View style={[styles.priorityBadge, { backgroundColor: getPriorityColor(assigned.priority) }]}>
-                        <Text style={styles.priorityText}>{assigned.priority}</Text>
-                      </View>
-                    </View>
-                    <View style={styles.queueCardDetails}>
-                      <View style={styles.queueDetailRow}>
-                        <IconSymbol name="person.fill" size={14} color="#666" />
-                        <Text style={styles.queueDetailText}>{assigned.worker.name}</Text>
-                      </View>
-                      <View style={styles.queueDetailRow}>
-                        <IconSymbol name="map.fill" size={14} color="#666" />
-                        <Text style={styles.queueDetailText}>{assigned.area}</Text>
-                      </View>
-                      <View style={styles.queueDetailRow}>
-                        <IconSymbol name="calendar.fill" size={14} color="#666" />
-                        <Text style={styles.queueDetailText}>
-                          {new Date(assigned.startDate).toLocaleDateString()} - {new Date(assigned.endDate).toLocaleDateString()}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                ))}
+  <View style={styles.queueSection}>
+    <View style={styles.queueHeader}>
+      <Text style={styles.queueTitle}>Assignment Queue</Text>
+      <View style={styles.queueBadge}>
+        <Text style={styles.queueBadgeText}>{assignedTasks.length}</Text>
+      </View>
+    </View>
 
+    {assignedTasks.map((assigned) => {
+      // Right swipe action for delete
+      const renderRightActions = () => (
+        assigned.status === 'Completed' ? (
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#F44336',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 80,
+              borderRadius: 12,
+              marginVertical: 5,
+            }}
+            onPress={() => {
+              setAssignedTasks(prev => prev.filter(t => t.id !== assigned.id));
+              Alert.alert('Deleted', `Task "${assigned.taskType}" removed.`);
+            }}
+          >
+            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Delete</Text>
+          </TouchableOpacity>
+        ) : null
+      );
+
+      return (
+        <Swipeable key={assigned.id} renderRightActions={renderRightActions}>
+          <View style={styles.queueCard}>
+            <View style={styles.queueCardHeader}>
+              <Text style={styles.queueCardTitle}>{assigned.taskType}</Text>
+              <View
+                style={[styles.priorityBadge, { backgroundColor: getPriorityColor(assigned.priority) }]}
+              >
+                <Text style={styles.priorityText}>{assigned.priority}</Text>
+              </View>
+            </View>
+            <View style={styles.queueCardDetails}>
+              <View style={styles.queueDetailRow}>
+                <IconSymbol name="person.fill" size={14} color="#666" />
+                <Text style={styles.queueDetailText}>{assigned.worker.name}</Text>
+              </View>
+              <View style={styles.queueDetailRow}>
+                <IconSymbol name="map.fill" size={14} color="#666" />
+                <Text style={styles.queueDetailText}>{assigned.area}</Text>
+              </View>
+              <View style={styles.queueDetailRow}>
+                <IconSymbol name="calendar.fill" size={14} color="#666" />
+                <Text style={styles.queueDetailText}>
+                  {new Date(assigned.startDate).toLocaleDateString()} - {new Date(assigned.endDate).toLocaleDateString()}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Swipeable>
+      );
+    })}
+  
                 {/* Confirm All Button */}
                 <TouchableOpacity
                   style={styles.confirmAllButton}
@@ -835,7 +971,7 @@ const styles = StyleSheet.create({
     top: '50%',
     transform: [{ translateY: -10 }],
   },
-
+  
   searchInput: {
     paddingLeft: 40,
     paddingRight: 12,
