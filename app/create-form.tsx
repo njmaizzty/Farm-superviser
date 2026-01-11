@@ -1,6 +1,4 @@
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -22,61 +20,63 @@ export default function CreateFormScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Initialize form based on type
-    if (type === 'task') {
-      setFormData({
-        title: '',
-        description: '',
-        priority: 'Medium',
-        assignedTo: '',
-        startDate: '',
-        endDate: '',
-        category: 'Maintenance',
-        assetId: '',
-      });
-    } else if (type === 'worker') {
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        position: '',
-        department: '',
-        skills: '',
-        location: '',
-      });
-    } else if (type === 'asset') {
-      setFormData({
-        name: '',
-        category: '',
-        manufacturer: '',
-        model: '',
-        serialNumber: '',
-        location: '',
-        purchaseDate: '',
-        purchasePrice: '',
-      });
-    } else if (type === 'area') {
-      // setFormData({
-      //   blockName: '',
-      //   phase: '',
-      //   cropType: '',
-      //   totalArea: '',
-      //   blocks: '',
-      //   healthScore: '',
-      //   productivity: '',
-      //   supervisor: '',
-      //   irrigation: '',
-      //   soilType: '',
-      //   notes: '',
-      // });
-    }
-  }, [type]);
+  if (type === 'task') {
+    setFormData({
+      title: '',
+      description: '',
+      priority: 'Medium',
+      assignedTo: '',
+      startDate: '',
+      endDate: '',
+      category: 'Maintenance',
+      assetId: '',
+    });
+  } else if (type === 'worker') {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      position: '',
+      department: '',
+      skills: '',
+      location: '',
+    });
+  } else if (type === 'asset') {
+    setFormData({
+      name: '',
+      category: '',
+      manufacturer: '',
+      model: '',
+      serialNumber: '',
+      location: '',
+      purchaseDate: '',
+      purchasePrice: '',
+    });
+  } else if (type === 'area') {
+    setFormData({
+      phaseName: '',
+      phaseNumber: '',
+      description: '',
+      totalArea: '',
+      expectedBlocks: '',
+      status: '',
+      establishedDate: '',
+    });
+  }
+}, [type]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev: any) => ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  // --- FIXED: handleCreatePhase ---
+  const handleCreatePhase = () => {
+    router.push(
+      `/create-block?phaseData=${encodeURIComponent(JSON.stringify(formData))}`
+    );
   };
 
   const handleSubmit = async () => {
@@ -418,167 +418,95 @@ export default function CreateFormScreen() {
     </>
   );
 
-  const renderAreaForm = () => (
-    <>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Block Name *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Block A"
-          value={formData.blockName}
-          onChangeText={(text) => handleInputChange('blockName', text)}
-          placeholderTextColor="#999999"
-        />
-      </View>
+  const renderPhaseForm = () => (
+  <>
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Phase Name *</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Phase A"
+        value={formData.phaseName}
+        onChangeText={(text) => handleInputChange('phaseName', text)}
+        placeholderTextColor="#999999"
+      />
+    </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Phase *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Phase 1"
-          value={formData.phase}
-          onChangeText={(text) => handleInputChange('phase', text)}
-          placeholderTextColor="#999999"
-        />
-      </View>
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Phase Number *</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="1"
+        value={formData.phaseNumber}
+        onChangeText={(text) => handleInputChange('phaseNumber', text)}
+        keyboardType="numeric"
+        placeholderTextColor="#999999"
+      />
+    </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Crop Type</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Palm oil"
-          value={formData.cropType}
-          onChangeText={(text) => handleInputChange('cropType', text)}
-          placeholderTextColor="#999999"
-        />
-      </View>
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Description</Text>
+      <TextInput
+        style={[styles.input, styles.textArea]}
+        placeholder="Description of the phase"
+        value={formData.description}
+        onChangeText={(text) => handleInputChange('description', text)}
+        multiline
+        numberOfLines={4}
+        placeholderTextColor="#999999"
+      />
+    </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Total Area (hectares)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="25.5"
-          value={formData.totalArea}
-          onChangeText={(text) => handleInputChange('totalArea', text)}
-          keyboardType="numeric"
-          placeholderTextColor="#999999"
-        />
-      </View>
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Total Area (hectares)</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="25.5"
+        value={formData.totalArea}
+        onChangeText={(text) => handleInputChange('totalArea', text)}
+        keyboardType="numeric"
+        placeholderTextColor="#999999"
+      />
+    </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Blocks (actual/expected)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="11/12"
-          value={formData.blocks}
-          onChangeText={(text) => handleInputChange('blocks', text)}
-          placeholderTextColor="#999999"
-        />
-      </View>
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Expected Blocks</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="5"
+        value={formData.expectedBlocks}
+        onChangeText={(text) => handleInputChange('expectedBlocks', text)}
+        keyboardType="numeric"
+        placeholderTextColor="#999999"
+      />
+    </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Health Score (%)</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="90"
-          value={formData.healthScore}
-          onChangeText={(text) => handleInputChange('healthScore', text)}
-          keyboardType="numeric"
-          placeholderTextColor="#999999"
-        />
-      </View>
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Status</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Active / Inactive"
+        value={formData.status}
+        onChangeText={(text) => handleInputChange('status', text)}
+        placeholderTextColor="#999999"
+      />
+    </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Productivity</Text>
-        <View style={styles.segmentedControl}>
-          {['Low', 'Medium', 'High'].map((level) => (
-            <TouchableOpacity
-              key={level}
-              style={[
-                styles.segmentButton,
-                formData.productivity === level && styles.segmentButtonActive,
-              ]}
-              onPress={() => handleInputChange('productivity', level)}
-            >
-              <Text
-                style={[
-                  styles.segmentText,
-                  formData.productivity === level && styles.segmentTextActive,
-                ]}
-              >
-                {level}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </View>
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Established Date</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="YYYY-MM-DD"
+        value={formData.establishedDate}
+        onChangeText={(text) => handleInputChange('establishedDate', text)}
+        placeholderTextColor="#999999"
+      />
+    </View>
+  </>
+);
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Supervisor</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="John Smith"
-          value={formData.supervisor}
-          onChangeText={(text) => handleInputChange('supervisor', text)}
-          placeholderTextColor="#999999"
-        />
-      </View>
-
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Irrigation System</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Drip Irrigation"
-          value={formData.irrigation}
-          onChangeText={(text) => handleInputChange('irrigation', text)}
-          placeholderTextColor="#999999"
-        />
-      </View>
-
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Soil Type</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Loamy"
-          value={formData.soilType}
-          onChangeText={(text) => handleInputChange('soilType', text)}
-          placeholderTextColor="#999999"
-        />
-      </View>
-
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Notes</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          placeholder="Additional notes..."
-          value={formData.notes}
-          onChangeText={(text) => handleInputChange('notes', text)}
-          multiline
-          numberOfLines={4}
-          placeholderTextColor="#999999"
-        />
-      </View>
-    </>
-  );
-
-  return (
+        // Submit Button
+        return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" />
-
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-        >
-          <IconSymbol name="chevron.left" size={24} color="#2E7D32" />
-        </TouchableOpacity>
-
-        <Text style={styles.headerTitle}>Create {getFormTitle()}</Text>
-        <View style={styles.placeholder} />
-      </View>
-
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -586,22 +514,20 @@ export default function CreateFormScreen() {
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.form}>
             {type === 'task' && renderTaskForm()}
             {type === 'worker' && renderWorkerForm()}
             {type === 'asset' && renderAssetForm()}
-            {type === 'area' && renderAreaForm()}
+            {type === 'area' && renderPhaseForm()}
           </View>
         </ScrollView>
 
-        {/* Submit Button */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
+            onPress={type === 'area' ? handleCreatePhase : handleSubmit} // Use correct handler
             disabled={isLoading}
             activeOpacity={0.8}
           >
