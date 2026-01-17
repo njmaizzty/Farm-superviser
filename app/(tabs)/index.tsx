@@ -106,20 +106,26 @@ export default function DashboardScreen() {
             <ActionCard
               title="Create Task"
               subtitle="Assign new work"
+              icon="plus.circle.fill"
+              color="#FFD600" // Yellow
             />
           </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.push("/reports")}>
+            <TouchableOpacity onPress={() => router.push("/areas")}>
               <ActionCard
-                title="View Reports"
-                subtitle="Check progress"
+                title="View Areas"
+                subtitle="Manage Area"
+                icon="map.fill"
+                color="#F44336" // Red
               />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => router.push("/workers")}>
             <ActionCard
               title="Manage Workers"
-              subtitle="Team overview"
+              subtitle="Check Progress"
+              icon="person.3.fill"
+              color="#2196F3" // Blue
             />
           </TouchableOpacity>
 
@@ -127,6 +133,8 @@ export default function DashboardScreen() {
             <ActionCard
               title="Asset Status"
               subtitle="Equipment check"
+              icon="wrench.fill"
+              color="#9C27B0" // Purple
             />
           </TouchableOpacity>
           </View>
@@ -202,13 +210,17 @@ function StatCard({
 function ActionCard({
   title,
   subtitle,
+  icon = "house.fill",
+  color = "#2196F3", // default color
 }: {
   title: string;
   subtitle: string;
+  icon?: string;
+  color?: string;
 }) {
   return (
-    <View style={styles.actionCard}>
-      <IconSymbol name="house.fill" size={28} color="#FFFFFF" />
+    <View style={[styles.actionCard, { backgroundColor: color }]}>
+      <IconSymbol name={icon} size={28} color="#FFFFFF" />
       <Text style={styles.actionTitle}>{title}</Text>
       <Text style={styles.actionSubtitle}>{subtitle}</Text>
     </View>

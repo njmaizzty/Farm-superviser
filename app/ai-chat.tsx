@@ -248,7 +248,7 @@ export default function AIChatScreen() {
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.textInput}
-              placeholder="Ask me anything about your farm..."
+              placeholder="Ask me anything about your farm.."
               placeholderTextColor="#999999"
               value={inputText}
               onChangeText={setInputText}
