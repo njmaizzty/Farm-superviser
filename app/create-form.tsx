@@ -389,10 +389,11 @@ const ASSET_YEARS = Array.from({ length: 25 }, (_, i) => `${2025 - i}`);
   <>
     {/* Asset Name */}
     <View style={styles.inputGroup}>
-      <Text style={styles.label}>Asset Name </Text>
+      <Text style={styles.label}>Asset Name</Text>
       <TextInput
         style={styles.input}
-        placeholder="e.g. Tractor"
+        placeholder="e.g., Tractor"
+        placeholderTextColor="#999999"
         value={formData.assetName}
         onChangeText={(text) => handleInputChange('assetName', text)}
       />
@@ -404,6 +405,7 @@ const ASSET_YEARS = Array.from({ length: 25 }, (_, i) => `${2025 - i}`);
       <TextInput
         style={styles.input}
         placeholder="AST-001"
+        placeholderTextColor="#999999"
         value={formData.assetId}
         onChangeText={(text) => handleInputChange('assetId', text)}
       />
@@ -496,6 +498,7 @@ const ASSET_YEARS = Array.from({ length: 25 }, (_, i) => `${2025 - i}`);
       <TextInput
         style={styles.input}
         placeholder="e.g. John Deere"
+        placeholderTextColor="#999999"
         value={formData.manufacturer}
         onChangeText={(text) => handleInputChange('manufacturer', text)}
       />
@@ -507,6 +510,7 @@ const ASSET_YEARS = Array.from({ length: 25 }, (_, i) => `${2025 - i}`);
       <TextInput
         style={styles.input}
         placeholder="Model number"
+        placeholderTextColor="#999999"
         value={formData.model}
         onChangeText={(text) => handleInputChange('model', text)}
       />
@@ -549,6 +553,7 @@ const ASSET_YEARS = Array.from({ length: 25 }, (_, i) => `${2025 - i}`);
       <TextInput
         style={styles.input}
         placeholder="S/N"
+        placeholderTextColor="#999999"
         value={formData.serialNumber}
         onChangeText={(text) => handleInputChange('serialNumber', text)}
       />
@@ -623,16 +628,19 @@ const ASSET_YEARS = Array.from({ length: 25 }, (_, i) => `${2025 - i}`);
 </View>
 
     {/* Purchase Price */}
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Purchase Price</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="RM 0.00"
-        keyboardType="numeric"
-        value={formData.purchasePrice}
-        onChangeText={(text) => handleInputChange('purchasePrice', text)}
-      />
-    </View>
+<View style={styles.inputGroup}>
+  <Text style={styles.label}>Purchase Price</Text>
+  <TextInput
+    style={styles.input}
+    keyboardType="numeric"
+    value={`RM ${formData.purchasePrice || ''}`} // RM always appears
+    onChangeText={(text) => {
+      // Remove the "RM " prefix before storing the number
+      const numericText = text.replace(/^RM\s?/, '');
+      handleInputChange('purchasePrice', numericText);
+    }}
+  />
+</View>
 
     {/* Efficiency */}
 <View style={styles.inputGroup}>
@@ -1048,4 +1056,27 @@ centerText: {
   fontSize: 16,
   fontWeight: '500',
 },
+  currencyInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderRadius: 12,
+    backgroundColor: '#FFFFFF',
+    height: 52,
+    paddingHorizontal: 12,
+  },
+  currencyText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333333',
+    marginRight: 8,
+  },
+  currencyTextInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 16,
+    color: '#333333',
+    padding: 0,
+  },
 });
